@@ -7,7 +7,12 @@ fn main() {
     if args.len() != 2 {
         println!("Please enter argument containing bandcamp page link.");
     } else {
-        let download_links = bandcamp::extract_audio_links(args.get(1).unwrap()).expect("Error parsing bandcamp site.");
+        let download_links = bandcamp::extract_audio_links(args.get(1).unwrap());
+        if download_links.is_err() {
+            println!("Error parsing bandcamp site.");
+            return;
+        }
+        let download_links = download_links.unwrap();
         println!("Starting download. Found {} tracks...", download_links.len());
         for (link, metadata) in download_links {
             let downloaded_file = downloader::download_from_link(link).unwrap();
