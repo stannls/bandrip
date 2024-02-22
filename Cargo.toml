@@ -1,5 +1,7 @@
 [package]
 name = "bandrip"
+description = "A simple CLI to rip songs from bandcamp."
+license = "GPL-3.0"
 version = "0.1.0"
 edition = "2021"
 
