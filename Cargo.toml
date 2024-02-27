@@ -14,4 +14,3 @@ gjson = "0.8.1"
 rand = "0.8.5"
 reqwest = {version="0.11.24", features=["blocking"]}
 scraper = "0.18.1"
-tempfile = "3.10.0"
