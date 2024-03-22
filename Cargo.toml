@@ -9,6 +9,7 @@ edition = "2021"
 
 [dependencies]
 audiotags = "0.5.0"
+clap = {version="4.5.3", features=["cargo"]}
 dirs = "5.0.1"
 gjson = "0.8.1"
 rand = "0.8.5"
