@@ -1,29 +1,25 @@
 {
   inputs = {
+    naersk.url = "github:nix-community/naersk/master";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-	rust-overlay.url = "github:oxalica/rust-overlay";
+    utils.url = "github:numtide/flake-utils";
   };
-  outputs = { self, nixpkgs, flake-utils, rust-overlay }:
-    flake-utils.lib.eachDefaultSystem
-      (system:
-        let
-          overlays = [ (import rust-overlay) ];
-          pkgs = import nixpkgs {
-            inherit system overlays;
-          };
-          rustToolchain = pkgs.rust-bin.nightly.latest.default;
-          # new! 👇
-          nativeBuildInputs = with pkgs; [ rustToolchain pkg-config ];
-          # also new! 👇
-          buildInputs = with pkgs; [ openssl alsa-lib pkg-config ];
-        in
-        with pkgs;
-        {
-          devShells.default = mkShell {
-            # 👇 and now we can just inherit them
-            inherit buildInputs nativeBuildInputs;
-          };
-        }
-      );
+
+  outputs = { self, nixpkgs, utils, naersk }:
+    utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+        naersk-lib = pkgs.callPackage naersk { };
+      in
+      {
+        defaultPackage = naersk-lib.buildPackage {
+		  src = ./.;
+          buildInputs = with pkgs; [ openssl pkg-config ];
+		};
+        devShell = with pkgs; mkShell {
+          buildInputs = [ cargo rustc rustfmt pre-commit rustPackages.clippy ];
+          RUST_SRC_PATH = rustPlatform.rustLibSrc;
+        };
+      }
+    );
 }
