@@ -38,14 +38,14 @@ fn main() {
     }
     println!(
         "Finished downloading to {:?}",
-        get_download_dir(&download_links.get(0).unwrap().1).into_os_string()
+        get_download_dir(&download_links.first().unwrap().1).into_os_string()
     );
 }
 
 fn get_download_dir(metadata: &TrackMetadata) -> PathBuf {
     let mut download_dir = audio_dir().unwrap();
     download_dir.push("bandrip");
-    download_dir.push(metadata.artist.to_owned());
-    download_dir.push(metadata.album.to_owned());
+    download_dir.push(&metadata.artist);
+    download_dir.push(&metadata.album);
     download_dir
 }
