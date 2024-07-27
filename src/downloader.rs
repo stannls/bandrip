@@ -33,7 +33,14 @@ pub fn move_and_tag_file(filename: String, metadata: TrackMetadata) -> Result<()
         file_dir.push(metadata.artist.to_owned());
         file_dir.push(metadata.album.to_owned());
         fs::create_dir_all(file_dir.to_str().unwrap())?;
-        file_dir.push(format!("{} - {} - {} {}.mp3", metadata.artist, metadata.album, metadata.track_number, metadata.name));
+        let filename: String = format!("{} - {} - {} {}.mp3", metadata.artist, metadata.album, metadata.track_number, metadata.name).chars()
+            // Escpae slashes
+            .map(|c| if c == '/' {
+                '|'
+            } else {
+                c
+            }).collect();
+        file_dir.push(filename);
 
         // Using copy and delete here instead of rename because rename will fail when the
         // destination is on a different mount
