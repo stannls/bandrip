@@ -37,14 +37,6 @@ pub fn move_and_tag_file(
     tags.write_to_path(&filename)?;
 
     file_dir.push("bandrip");
-    file_dir.push(&metadata.artist);
-    file_dir.push(&metadata.album);
-    fs::create_dir_all(file_dir.to_str().unwrap())?;
-    file_dir.push(format!(
-        "{} - {} - {} {}.mp3",
-        metadata.artist, metadata.album, metadata.track_number, metadata.name
-    ));
-    file_dir.push("bandrip");
     file_dir.push(metadata.artist.to_owned());
     file_dir.push(metadata.album.to_owned());
     fs::create_dir_all(file_dir.to_str().unwrap())?;
